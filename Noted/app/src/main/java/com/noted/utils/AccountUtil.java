@@ -112,10 +112,11 @@ public class AccountUtil {
      * Writes user information to the database when a new user is created or a user updates their settings.
      *
      * @param userId ID for the user
+     * @param username Username for the user
      * @param email Email for the user
      */
-    public static void writeUser(String userId, String email) {
-        User user = new User(email);
+    public static void writeUser(String userId, String username, String email) {
+        User user = new User(username, email);
         getDatabaseReference().child("users").child(userId).setValue(user);
     }
 }

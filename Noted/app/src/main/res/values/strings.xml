@@ -7,7 +7,7 @@
     <string name="nav_header_subtitle">email</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="title_activity_dashboard">MEMO DASHBOARD</string>
+    <string name="title_activity_dashboard">My Memos</string>
 
     <string name="action_sort_note">Sort by Notes</string>
     <string name="action_sort_voice">Sort by Voice</string>

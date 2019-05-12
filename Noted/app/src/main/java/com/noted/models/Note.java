@@ -10,7 +10,6 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class Note implements Memo {
-    private String UID;
     private String TITLE;
     private String CONTENT;
     private String TIMESTAMP;
@@ -19,18 +18,12 @@ public class Note implements Memo {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Note(String uid, String title, String content,
+    public Note(String title, String content,
                 String timestamp) {
-        this.UID = uid;
         this.TITLE = title;
         this.CONTENT = content;
         this.TIMESTAMP = timestamp;
     }
-
-    public String getUID() {
-        return UID;
-    }
-    public void setUID(String uid) {this.UID = uid; }
 
     public String getTITLE() {
         return TITLE;
@@ -55,7 +48,6 @@ public class Note implements Memo {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", UID);
         result.put("title", TITLE);
         result.put("content", CONTENT);
         result.put("timestamp", TIMESTAMP);
