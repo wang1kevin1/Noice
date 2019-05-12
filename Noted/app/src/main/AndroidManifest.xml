@@ -15,52 +15,39 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!-- Main Activity: currently DEBUG -->
         <activity
             android:name=".DebugActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="com.package.name.MyAction" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <!-- Create Account Activity -->
         <activity
             android:name=".CreateAccountActivity"
-            android:label="CREATE ACCOUNT"
             android:configChanges="orientation|keyboardHidden"
+            android:label="CREATE ACCOUNT"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-
-        <!-- Login Activity -->
+            android:windowSoftInputMode="stateHidden" /> <!-- Login Activity -->
         <activity
             android:name=".LoginActivity"
-            android:label="LOGIN"
             android:configChanges="orientation|keyboardHidden"
+            android:label="LOGIN"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
-        <!-- Dashboard Activity -->
         <activity
             android:name=".DashboardActivity"
-            android:label="DASHBOARD"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
