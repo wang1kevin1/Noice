@@ -37,7 +37,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="CREATE ACCOUNT"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" /> <!-- Login Activity -->
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -46,8 +46,16 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".DashboardActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".CreateNoteActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="NEW NOTE"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>
