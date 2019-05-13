@@ -115,7 +115,7 @@ public class AccountUtil {
      * @param username Username for the user
      * @param email Email for the user
      */
-    public static void writeUser(String userId, String username, String email) {
+    public static void writeUser(String userId, String email, String username) {
         User user = new User(username, email);
         getDatabaseReference().child("users").child(userId).setValue(user);
     }
