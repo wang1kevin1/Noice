@@ -39,7 +39,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
     private EditText mConfirmPasswordEditText;
-    private EditText mUsernameEditText;
     private Button mCreateAccountButton;
 
     @Override
@@ -51,7 +50,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         mEmailEditText = findViewById(R.id.editTextEmail);
         mPasswordEditText = findViewById(R.id.editTextPassword);
         mConfirmPasswordEditText = findViewById(R.id.editTextConfirmPassword);
-        mUsernameEditText = findViewById(R.id.editTextUsername);
 
         // Buttons
         mCreateAccountButton = findViewById(R.id.buttonCreateAccount);
@@ -66,7 +64,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                 if(mPasswordEditText.getText().toString().equals(mConfirmPasswordEditText.getText().toString())) {
                     mCreateAccountButton.setEnabled(false);
-                    createAccount(mEmailEditText.getText().toString().trim(), mPasswordEditText.getText().toString(), mUsernameEditText.getText().toString().trim());
+                    createAccount(mEmailEditText.getText().toString().trim(), mPasswordEditText.getText().toString());
                 } else {
                     mPasswordEditText.setError("Passwords do not match");
                     mConfirmPasswordEditText.setError("Passwords do not match");
@@ -81,7 +79,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
-    private void createAccount(String email, String password, final String username){
+    private void createAccount(String email, String password){
 
         if(email.isEmpty())
             mEmailEditText.setError("Email field is required.");
@@ -101,7 +99,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                AccountUtil.writeUser(user.getUid(), user.getEmail(), username);
+                                AccountUtil.writeUser(user.getUid(), user.getEmail());
 
                                 Intent myIntent = new Intent(CreateAccountActivity.this,
                                         DashboardActivity.class);

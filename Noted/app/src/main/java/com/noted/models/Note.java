@@ -3,13 +3,12 @@ package com.noted.models;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.noted.interfaces.Memo;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class Note implements Memo {
+public class Note {
     private String TITLE;
     private String CONTENT;
     private String TIMESTAMP;
@@ -39,11 +38,6 @@ public class Note implements Memo {
         return TIMESTAMP;
     }
     public void setTIMESTAMP(String timestamp) {this.TIMESTAMP = timestamp; }
-
-    @Override
-    public int getType() {
-        return Memo.TYPE_NOTE;
-    }
 
     @Exclude
     public Map<String, Object> toMap() {

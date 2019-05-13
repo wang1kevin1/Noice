@@ -14,14 +14,17 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
-import com.noted.interfaces.Memo;
+import com.noted.models.Note;
+import com.noted.models.Voice;
 
 import java.util.ArrayList;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ArrayList<Memo> dMemoList;
+    private ArrayList<Note> dNoteList;
+    private ArrayList<Voice> dVoiceList;
+
     private TextView dTextEmpty;
 
     @Override
@@ -46,9 +49,9 @@ public class DashboardActivity extends AppCompatActivity
 
         dTextEmpty = findViewById(R.id.dashboardTextEmpty);
 
-        dMemoList = new ArrayList<Memo>();
+        dNoteList = new ArrayList<Note>();
 
-        if (dMemoList.isEmpty()) {
+        if (dNoteList.isEmpty()) {
             dTextEmpty.setVisibility(View.VISIBLE);
         } else {
             dTextEmpty.setVisibility(View.GONE);
@@ -80,11 +83,7 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sort_note) {
-            return true;
-        } else if (id == R.id.action_sort_voice) {
-
-        } else if (id == R.id.action_sort_date) {
+        if (id == R.id.action_sort_date) {
 
         }
 
