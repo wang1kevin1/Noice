@@ -36,7 +36,10 @@ public class CreateVoiceActivity extends AppCompatActivity {
     private Button Record;
     private Button Stop;
     private MediaRecorder Recorder;
-    private String pathSave;  // need to check if this is acutally where and how to create this
+    private SimpleDateFormat simpleDateFormat;
+    private String pathSave;
+    private String DateStamp; // these variabels to put in data base
+    private String Title;
     final int REQUEST_PERMISSION_CODE = 1000;
 
     @Override
@@ -52,12 +55,13 @@ public class CreateVoiceActivity extends AppCompatActivity {
         Record = findViewById(R.id.RECORD);
         Stop = findViewById(R.id.STOP);
 
-
+            // setting up the record button listener
             Record.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(Permission())
                     {
+                        // get the path to the audio
                         pathSave = Environment.getExternalStorageDirectory()
                                 .getAbsolutePath() +"/" + UUID.randomUUID().toString()+"_audio_record.3gp";
 
@@ -66,7 +70,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
                             System.out.println("the path is this!!!!!!!!!!!!!!!!!!!!!!!!!!" +pathSave);
                         }
                         MediaRecorderFunction();
-
+                        // starting the recorder
                         try{
                             Recorder.prepare();
                             Recorder.start();
@@ -80,7 +84,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
                     }
                     }
             });
-
+            // setting the Stop button to stop recording
             Stop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -88,21 +92,17 @@ public class CreateVoiceActivity extends AppCompatActivity {
                     System.out.println("Stopped Recording, this is the path: !!!!!!!!!!!!!!!!!!!!!!!!!!" +pathSave);
                     Stop.setEnabled(false);
                     Record.setEnabled(true);
+                    simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+                    DateStamp = simpleDateFormat.format(new Date());
+                    Title = nameOfMemo.getText().toString().trim();
                     Toast.makeText(CreateVoiceActivity.this, "Stopped Recording...", Toast.LENGTH_SHORT).show();
                 }
             });
 
 
 
-
-
-
-
-
-
-
     }
-
+// seting up the recorder
     public void MediaRecorderFunction()
     {
         Recorder = new MediaRecorder();
@@ -112,6 +112,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
         Recorder.setOutputFile(pathSave);
 
     }
+    // checking if there is permission, other wise requesting it
     private boolean Permission()
     {
         int writeResult = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE); // check if can write
