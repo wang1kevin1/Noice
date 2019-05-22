@@ -63,7 +63,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                 mEmailEditText.setError(null);
 
                 if(mPasswordEditText.getText().toString().equals(mConfirmPasswordEditText.getText().toString())) {
-                    mCreateAccountButton.setEnabled(false);
                     createAccount(mEmailEditText.getText().toString().trim(), mPasswordEditText.getText().toString());
                 } else {
                     mPasswordEditText.setError("Passwords do not match");
@@ -103,7 +102,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                                 Intent myIntent = new Intent(CreateAccountActivity.this,
                                         DashboardActivity.class);
-                                mCreateAccountButton.setEnabled(true);
                                 startActivity(myIntent);
                             } else {
                                 // If sign in fails, display a message to the user.

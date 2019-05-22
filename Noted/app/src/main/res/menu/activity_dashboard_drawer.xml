@@ -3,16 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="My Memos">
+    <item android:title="My Notes">
         <menu>
             <item
-                android:id="@+id/nav_dashboardAddNote"
+                android:id="@+id/nav_dashboardNote"
                 android:icon="@drawable/ic_menu_note"
                 android:title="@string/menu_note" />
             <item
+                android:id="@+id/nav_dashboardAddNote"
+                android:icon="@drawable/ic_fab_note"
+                android:title="New Note" />
+        </menu>
+    </item>
+
+    <item android:title="My Recordings">
+        <menu>
+            <item
+            android:id="@+id/nav_dashboardVoice"
+            android:icon="@drawable/ic_menu_voice"
+            android:title="@string/menu_record" />
+            <item
                 android:id="@+id/nav_dashboardAddVoice"
-                android:icon="@drawable/ic_menu_record"
-                android:title="@string/menu_record" />
+                android:icon="@drawable/ic_fab_voice"
+                android:title="New Recording" />
         </menu>
     </item>
 

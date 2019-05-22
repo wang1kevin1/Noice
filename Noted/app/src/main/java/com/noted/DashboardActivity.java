@@ -49,6 +49,11 @@ public class DashboardActivity extends AppCompatActivity
 
         dTextEmpty = findViewById(R.id.dashboardTextEmpty);
 
+        // default focus is notes
+        displayNotes();
+    }
+
+    public void displayNotes() {
         dNoteList = new ArrayList<Note>();
 
         if (dNoteList.isEmpty()) {
@@ -56,6 +61,20 @@ public class DashboardActivity extends AppCompatActivity
         } else {
             dTextEmpty.setVisibility(View.GONE);
         }
+
+
+    }
+
+    public void displayVoice() {
+        dNoteList = new ArrayList<Note>();
+
+        if (dNoteList.isEmpty()) {
+            dTextEmpty.setVisibility(View.VISIBLE);
+        } else {
+            dTextEmpty.setVisibility(View.GONE);
+        }
+
+
     }
 
     @Override
@@ -96,10 +115,14 @@ public class DashboardActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_dashboardAddNote) {
+        if (id == R.id.nav_dashboardNote) {
+            displayNotes();
+        } else if (id == R.id.nav_dashboardAddNote) {
             Intent myIntent =
                     new Intent(DashboardActivity.this, CreateNoteActivity.class);
             startActivity(myIntent);
+        } else if (id == R.id.nav_dashboardVoice) {
+            displayVoice();
         } else if (id == R.id.nav_dashboardAddVoice) {
             Intent myIntent =
                     new Intent(DashboardActivity.this, CreateVoiceActivity.class);
