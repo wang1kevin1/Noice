@@ -13,4 +13,9 @@
     <string name="menu_note">Notes</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_exit">Logout</string>
+
+    <string name="StartRecordingButton">RECORD</string>
+    <string name="StopRecordingButton">Stop</string>
+    <string name="NameOfRecordMemo">untitled</string>
+
 </resources>

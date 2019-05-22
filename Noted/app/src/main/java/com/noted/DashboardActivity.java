@@ -101,6 +101,9 @@ public class DashboardActivity extends AppCompatActivity
                     new Intent(DashboardActivity.this, CreateNoteActivity.class);
             startActivity(myIntent);
         } else if (id == R.id.nav_dashboardAddVoice) {
+            Intent myIntent =
+                    new Intent(DashboardActivity.this, CreateVoiceActivity.class);
+            startActivity(myIntent);
 
         } else if (id == R.id.nav_dashboardAccountSettings) {
 
