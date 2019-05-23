@@ -101,6 +101,14 @@ public class AccountUtil {
 
     /**
      *
+     * @return a current user's UID
+     */
+    public static String getUid(){
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    /**
+     *
      * @return a reference to the database
      */
     public static DatabaseReference getDatabaseReference(){

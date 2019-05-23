@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -14,13 +17,33 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.noted.adapters.NoteRecyclerAdapter;
 import com.noted.models.Note;
 import com.noted.models.Voice;
 
 import java.util.ArrayList;
 
+import static com.noted.utils.AccountUtil.getUid;
+
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    // initialize database
+    private DatabaseReference dDatabase;
+    private String dUID;
+
+    // RecyclerView
+    private RecyclerView dNoteRecycler;
+    private RecyclerView dVoiceRecycler;
+
+    // Adapter + layout manager
+    private NoteRecyclerAdapter dNoteAdapter;
+    private LinearLayoutManager layoutManager;
 
     private ArrayList<Note> dNoteList;
     private ArrayList<Voice> dVoiceList;
@@ -47,34 +70,71 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // initialize database stuff
+        dUID = getUid();
+        dDatabase = FirebaseDatabase.getInstance().getReference();
+        dDatabase.keepSynced(true);
+
+        // initialize views
         dTextEmpty = findViewById(R.id.dashboardTextEmpty);
+        dNoteRecycler = findViewById(R.id.dashboardNoteRecyclerView);
+        dVoiceRecycler = findViewById(R.id.dashboardVoiceRecyclerView);
 
         // default focus is notes
         displayNotes();
     }
+    private void displayNotes() {
+        dVoiceRecycler.setVisibility(View.GONE);
 
-    public void displayNotes() {
-        dNoteList = new ArrayList<Note>();
+        dDatabase.child("notes").child(dUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dNoteList = new ArrayList<Note>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                    Note note = postSnapshot.getValue(Note.class);
+                    dNoteList.add(note);
 
-        if (dNoteList.isEmpty()) {
-            dTextEmpty.setVisibility(View.VISIBLE);
-        } else {
-            dTextEmpty.setVisibility(View.GONE);
-        }
+                    String postKey = postSnapshot.getKey();
+                }
+                // set empty note list text
+                if (dNoteList.isEmpty()) {
+                    dNoteRecycler.setVisibility(View.GONE);
+                    dTextEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    dTextEmpty.setVisibility(View.GONE);
+                    dNoteRecycler.setVisibility(View.VISIBLE);
+                }
 
+                // specify an adapter
+                dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
 
+                // use a linear layout manager
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+                dNoteRecycler.setLayoutManager(layoutManager);
+
+                // set adapter
+                dNoteRecycler.setAdapter(dNoteAdapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
     }
 
-    public void displayVoice() {
-        dNoteList = new ArrayList<Note>();
+    private void displayVoice() {
+        dNoteRecycler.setVisibility(View.GONE);
 
-        if (dNoteList.isEmpty()) {
+        dVoiceList = new ArrayList<Voice>();
+
+        if (dVoiceList.isEmpty()) {
+            dVoiceRecycler.setVisibility(View.GONE);
             dTextEmpty.setVisibility(View.VISIBLE);
         } else {
             dTextEmpty.setVisibility(View.GONE);
+            dVoiceRecycler.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override

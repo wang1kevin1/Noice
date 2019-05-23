@@ -8,11 +8,6 @@
     tools:context=".DashboardActivity"
     tools:showIn="@layout/app_bar_dashboard">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/dashboardRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <TextView
         android:id="@+id/dashboardTextEmpty"
         android:layout_width="match_parent"
@@ -20,5 +15,17 @@
         android:gravity="center"
         android:visibility="gone"
         android:text="No Memos to Show" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dashboardNoteRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dashboardVoiceRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 
 </android.support.constraint.ConstraintLayout>

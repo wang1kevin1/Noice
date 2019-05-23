@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.noted.utils.AccountUtil.getUid;
+
 public class CreateNoteActivity extends AppCompatActivity {
 
     private static final String REQUIRED = "Required";
@@ -56,7 +58,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         nDatabase = FirebaseDatabase.getInstance().getReference();
 
         // get userID
-        nUID = "testUID";
+        nUID = getUid();
         //nUID = AccountUtil.getCurrentUser().getUid();
 
         // initialize note form
