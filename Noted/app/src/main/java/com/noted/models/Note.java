@@ -12,16 +12,18 @@ public class Note {
     private String TITLE;
     private String CONTENT;
     private String TIMESTAMP;
+    private String PUSHKEY;
 
     public Note() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
     public Note(String title, String content,
-                String timestamp) {
+                String timestamp, String pushkey) {
         this.TITLE = title;
         this.CONTENT = content;
         this.TIMESTAMP = timestamp;
+        this.PUSHKEY = pushkey;
     }
 
     public String getTITLE() {
@@ -39,12 +41,18 @@ public class Note {
     }
     public void setTIMESTAMP(String timestamp) {this.TIMESTAMP = timestamp; }
 
+    public String getPUSHKEY() {
+        return PUSHKEY;
+    }
+    public void setPUSHKEY(String pushkey) {this.PUSHKEY = pushkey; }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("title", TITLE);
         result.put("content", CONTENT);
         result.put("timestamp", TIMESTAMP);
+        result.put("pushkey", PUSHKEY);
 
         return result;
     }

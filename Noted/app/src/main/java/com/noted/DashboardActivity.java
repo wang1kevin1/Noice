@@ -83,6 +83,7 @@ public class DashboardActivity extends AppCompatActivity
         // default focus is notes
         displayNotes();
     }
+
     private void displayNotes() {
         dVoiceRecycler.setVisibility(View.GONE);
 

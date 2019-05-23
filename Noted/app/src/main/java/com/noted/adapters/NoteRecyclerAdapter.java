@@ -1,12 +1,17 @@
 package com.noted.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.noted.R;
 import com.noted.models.Note;
 
@@ -15,6 +20,8 @@ import java.util.ArrayList;
 public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapter.NoteViewHolder> {
 
     private ArrayList<Note> nNoteList;
+
+    private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference();
 
     Context context;
 

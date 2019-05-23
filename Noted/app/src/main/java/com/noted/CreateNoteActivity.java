@@ -16,12 +16,9 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
 import com.noted.models.Note;
-import com.noted.utils.AccountUtil;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,10 +109,13 @@ public class CreateNoteActivity extends AppCompatActivity {
         // get timestamp at latest moment
         nTimestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
-        // initialize new note
-        Note note = new Note(nTitle, nContent, nTimestamp);
+        // get push key
+        String key = nDatabase.child("notes").push().getKey();
 
-        saveNote(note);
+        // initialize new note
+        Note note = new Note(nTitle, nContent, nTimestamp, key);
+
+        saveNote(note, key);
 
         // Re-enable buttons
         setEditingEnabled(true);
@@ -124,12 +124,9 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     // Saves a note to the database
-    private void saveNote(Note note) {
+    private void saveNote(Note note, String key) {
         // note fields are valid
         Toast.makeText(CreateNoteActivity.this, "Saving...", Toast.LENGTH_LONG).show();
-
-        // get push key
-        String key = nDatabase.child("notes").push().getKey();
 
         // map note
         Map<String, Object> postValues = note.toMap();
