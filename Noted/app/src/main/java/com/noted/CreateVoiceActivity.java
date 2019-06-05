@@ -108,10 +108,10 @@ public class CreateVoiceActivity extends AppCompatActivity {
                     System.out.println("Stopped Recording, this is the path: !!!!!!!!!!!!!!!!!!!!!!!!!!" +pathSave);
                     Stop.setEnabled(false);
                     Record.setEnabled(true);
-                    uploadAudio();
                     simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
                     DateStamp = simpleDateFormat.format(new Date());
                     Title = nameOfMemo.getText().toString().trim();
+                    uploadAudio();
                     nameOfMemo.setText("");
                     Toast.makeText(CreateVoiceActivity.this, "Stopped Recording...", Toast.LENGTH_SHORT).show();
                 }
