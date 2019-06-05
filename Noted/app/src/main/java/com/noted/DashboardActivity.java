@@ -6,6 +6,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
@@ -42,6 +44,10 @@ public class DashboardActivity extends AppCompatActivity
     private RecyclerView dNoteRecycler;
     private RecyclerView dVoiceRecycler;
 
+    // SearchView
+    private SearchView dSearchNotes;
+    private SearchView dSearchVoice;
+
     // Adapter + layout manager
     private NoteRecyclerAdapter dNoteAdapter;
     private LinearLayoutManager layoutManager;
@@ -71,7 +77,45 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // initialize database stuff
+        //initialize searchviews
+        dSearchNotes = findViewById(R.id.dashboardSearchNotes);
+        dSearchNotes.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchNotes(query);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    searchNotes("");
+                }
+                return false;
+            }
+        });
+
+        dSearchVoice = findViewById(R.id.dashboardSearchVoice);
+        dSearchNotes.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchVoice(query);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    searchVoice("");
+                }
+                return false;
+            }
+        });
+
+
+            // initialize database stuff
         dUID = getUid();
         dDatabase = FirebaseDatabase.getInstance().getReference();
         dDatabase.keepSynced(true);
@@ -88,6 +132,7 @@ public class DashboardActivity extends AppCompatActivity
 
     private void displayNotes() {
         dVoiceRecycler.setVisibility(View.GONE);
+        dSearchVoice.setVisibility(View.GONE);
 
         dDatabase.child("notes").child(dUID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,10 +147,13 @@ public class DashboardActivity extends AppCompatActivity
                 // set empty note list text
                 if (dNoteList.isEmpty()) {
                     dNoteRecycler.setVisibility(View.GONE);
+                    dSearchNotes.setVisibility(View.GONE);
                     dTextEmpty.setText("No notes to display.");
                     dTextEmpty.setVisibility(View.VISIBLE);
+
                 } else {
                     dTextEmpty.setVisibility(View.GONE);
+                    dSearchNotes.setVisibility(View.VISIBLE);
                     dNoteRecycler.setVisibility(View.VISIBLE);
                 }
 
@@ -127,19 +175,114 @@ public class DashboardActivity extends AppCompatActivity
         });
     }
 
+    // copied from yardsale doesnt work yet
+    public void searchNotes(String query) {
+
+        final String keyword = query.toLowerCase();
+
+        dDatabase.child("users").child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userZipcode = user.getZIPCODE();
+
+                mDatabase.child("zipcode-posts").child(userZipcode)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                mPostData = new ArrayList<>();
+                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                    Post aPost = postSnapshot.getValue(Post.class);
+
+                                    if (aPost.getTITLE().toLowerCase().contains(keyword) ||
+                                            aPost.getDESCRIPTION().toLowerCase().contains(keyword)) {
+                                        mPostData.add(aPost);
+                                    }
+                                }
+
+                                cardAdapter = new PostRecyclerAdapter(mPostData, getApplication());
+
+                                LinearLayoutManager layoutmanager = new LinearLayoutManager(Navigation.this,
+                                        LinearLayoutManager.VERTICAL, false);
+                                postRecyclerView.setLayoutManager(layoutmanager);
+                                postRecyclerView.setAdapter(cardAdapter);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.v("read error", databaseError.getMessage());
+                            }
+                        });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
+    }
+
     private void displayVoice() {
         dNoteRecycler.setVisibility(View.GONE);
+        dSearchNotes.setVisibility(View.GONE);
 
         dVoiceList = new ArrayList<Voice>();
 
         if (dVoiceList.isEmpty()) {
             dVoiceRecycler.setVisibility(View.GONE);
+            dSearchNotes.setVisibility(View.GONE);
             dTextEmpty.setText("No recordings to display.");
             dTextEmpty.setVisibility(View.VISIBLE);
         } else {
             dTextEmpty.setVisibility(View.GONE);
+            dSearchNotes.setVisibility(View.VISIBLE);
             dVoiceRecycler.setVisibility(View.VISIBLE);
         }
+    }
+
+    // copied from yardsale doesnt work yet
+    public void searchVoice(String query) {
+
+        final String keyword = query.toLowerCase();
+
+        dDatabase.child("users").child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userZipcode = user.getZIPCODE();
+
+                mDatabase.child("zipcode-posts").child(userZipcode)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                mPostData = new ArrayList<>();
+                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                    Post aPost = postSnapshot.getValue(Post.class);
+
+                                    if (aPost.getTITLE().toLowerCase().contains(keyword) ||
+                                            aPost.getDESCRIPTION().toLowerCase().contains(keyword)) {
+                                        mPostData.add(aPost);
+                                    }
+                                }
+
+                                cardAdapter = new PostRecyclerAdapter(mPostData, getApplication());
+
+                                LinearLayoutManager layoutmanager = new LinearLayoutManager(Navigation.this,
+                                        LinearLayoutManager.VERTICAL, false);
+                                postRecyclerView.setLayoutManager(layoutmanager);
+                                postRecyclerView.setAdapter(cardAdapter);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.v("read error", databaseError.getMessage());
+                            }
+                        });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
     }
 
     @Override

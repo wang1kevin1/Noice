@@ -8,6 +8,26 @@
     tools:context=".DashboardActivity"
     tools:showIn="@layout/app_bar_dashboard">
 
+    <android.support.v7.widget.SearchView
+        android:id="@+id/dashboardSearchNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:queryHint="Search..."
+        app:iconifiedByDefault="false"
+        android:windowSoftInputMode="stateHidden"
+        android:layout_gravity="top"
+        android:layout_margin="8dp"/>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/dashboardSearchVoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:queryHint="Search..."
+        app:iconifiedByDefault="false"
+        android:windowSoftInputMode="stateHidden"
+        android:layout_gravity="top"
+        android:layout_margin="8dp"/>
+
     <TextView
         android:id="@+id/dashboardTextEmpty"
         android:layout_width="match_parent"
