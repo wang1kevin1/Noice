@@ -110,7 +110,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         nTimestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
         // get push key
-        String key = nDatabase.child("notes").push().getKey();
+        String key = nDatabase.child("notes").child(nUID).push().getKey();
 
         // initialize new note
         Note note = new Note(nTitle, nContent, nTimestamp, key);

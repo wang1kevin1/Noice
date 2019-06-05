@@ -82,6 +82,7 @@ public class DashboardActivity extends AppCompatActivity
         dVoiceRecycler = findViewById(R.id.dashboardVoiceRecyclerView);
 
         // default focus is notes
+        setTitle("My Notes");
         displayNotes();
     }
 
@@ -101,6 +102,7 @@ public class DashboardActivity extends AppCompatActivity
                 // set empty note list text
                 if (dNoteList.isEmpty()) {
                     dNoteRecycler.setVisibility(View.GONE);
+                    dTextEmpty.setText("No notes to display.");
                     dTextEmpty.setVisibility(View.VISIBLE);
                 } else {
                     dTextEmpty.setVisibility(View.GONE);
@@ -132,6 +134,7 @@ public class DashboardActivity extends AppCompatActivity
 
         if (dVoiceList.isEmpty()) {
             dVoiceRecycler.setVisibility(View.GONE);
+            dTextEmpty.setText("No recordings to display.");
             dTextEmpty.setVisibility(View.VISIBLE);
         } else {
             dTextEmpty.setVisibility(View.GONE);
@@ -178,12 +181,14 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboardNote) {
+            setTitle("My Notes");
             displayNotes();
         } else if (id == R.id.nav_dashboardAddNote) {
             Intent myIntent =
                     new Intent(DashboardActivity.this, CreateNoteActivity.class);
             startActivity(myIntent);
         } else if (id == R.id.nav_dashboardVoice) {
+            setTitle("My Recordings");
             displayVoice();
         } else if (id == R.id.nav_dashboardAddVoice) {
             Intent myIntent =

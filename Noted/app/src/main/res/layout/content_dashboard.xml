@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="No Memos to Show" />
+        android:text="Message" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dashboardNoteRecyclerView"
