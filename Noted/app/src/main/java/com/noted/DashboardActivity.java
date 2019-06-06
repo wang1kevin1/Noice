@@ -27,10 +27,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noted.adapters.NoteRecyclerAdapter;
 import com.noted.models.Note;
+import com.noted.models.User;
 import com.noted.models.Voice;
 
 import java.util.ArrayList;
 
+import static com.noted.utils.AccountUtil.getDatabaseReference;
 import static com.noted.utils.AccountUtil.getUid;
 
 public class DashboardActivity extends AppCompatActivity
@@ -100,7 +102,7 @@ public class DashboardActivity extends AppCompatActivity
         dSearchNotes.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchVoice(query);
+                //searchVoice(query);
 
                 return false;
             }
@@ -108,7 +110,7 @@ public class DashboardActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
-                    searchVoice("");
+                    //searchVoice("");
                 }
                 return false;
             }
@@ -117,7 +119,7 @@ public class DashboardActivity extends AppCompatActivity
 
             // initialize database stuff
         dUID = getUid();
-        dDatabase = FirebaseDatabase.getInstance().getReference();
+        dDatabase = getDatabaseReference();
         dDatabase.keepSynced(true);
 
         // initialize views
@@ -127,52 +129,58 @@ public class DashboardActivity extends AppCompatActivity
 
         // default focus is notes
         setTitle("My Notes");
+
+        dNoteList = new ArrayList<>();
+        dVoiceList = new ArrayList<>();
+
+        // Populate the list
+        populateNotes();
+
+        // Display the list
         displayNotes();
     }
 
-    private void displayNotes() {
-        dVoiceRecycler.setVisibility(View.GONE);
-        dSearchVoice.setVisibility(View.GONE);
-
+    private void populateNotes() {
         dDatabase.child("notes").child(dUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dNoteList = new ArrayList<Note>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Note note = postSnapshot.getValue(Note.class);
-                    dNoteList.add(note);
-
-                    String postKey = postSnapshot.getKey();
+                    if(!dNoteList.contains(note))
+                        dNoteList.add(note);
                 }
-                // set empty note list text
-                if (dNoteList.isEmpty()) {
-                    dNoteRecycler.setVisibility(View.GONE);
-                    dSearchNotes.setVisibility(View.GONE);
-                    dTextEmpty.setText("No notes to display.");
-                    dTextEmpty.setVisibility(View.VISIBLE);
-
-                } else {
-                    dTextEmpty.setVisibility(View.GONE);
-                    dSearchNotes.setVisibility(View.VISIBLE);
-                    dNoteRecycler.setVisibility(View.VISIBLE);
-                }
-
-                // specify an adapter
-                dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
-
-                // use a linear layout manager
-                layoutManager = new LinearLayoutManager(DashboardActivity.this,
-                        LinearLayoutManager.VERTICAL, false);
-                dNoteRecycler.setLayoutManager(layoutManager);
-
-                // set adapter
-                dNoteRecycler.setAdapter(dNoteAdapter);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.v("read error", databaseError.getMessage());
             }
         });
+    }
+
+    private void displayNotes() {
+        // set empty note list text
+        if (dNoteList.isEmpty()) {
+            dNoteRecycler.setVisibility(View.GONE);
+            dSearchNotes.setVisibility(View.GONE);
+            dTextEmpty.setText("No notes to display.");
+            dTextEmpty.setVisibility(View.VISIBLE);
+
+        } else {
+            dTextEmpty.setVisibility(View.GONE);
+            dSearchNotes.setVisibility(View.VISIBLE);
+            dNoteRecycler.setVisibility(View.VISIBLE);
+        }
+
+        // specify an adapter
+        dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
+
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                LinearLayoutManager.VERTICAL, false);
+        dNoteRecycler.setLayoutManager(layoutManager);
+
+        // set adapter
+        dNoteRecycler.setAdapter(dNoteAdapter);
     }
 
     // copied from yardsale doesnt work yet
@@ -180,45 +188,40 @@ public class DashboardActivity extends AppCompatActivity
 
         final String keyword = query.toLowerCase();
 
-        dDatabase.child("users").child(userId).addValueEventListener(new ValueEventListener() {
+        dDatabase.child("users").child(dUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                userZipcode = user.getZIPCODE();
+                // re-populate the list in case we are coming off another search
+                populateNotes();
 
-                mDatabase.child("zipcode-posts").child(userZipcode)
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                mPostData = new ArrayList<>();
-                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                                    Post aPost = postSnapshot.getValue(Post.class);
+                for (Note note : dNoteList) {
+                    dDatabase.child(note.getPUSHKEY())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                        Note currentNote = postSnapshot.getValue(Note.class);
 
-                                    if (aPost.getTITLE().toLowerCase().contains(keyword) ||
-                                            aPost.getDESCRIPTION().toLowerCase().contains(keyword)) {
-                                        mPostData.add(aPost);
+                                        if (!currentNote.getTITLE().toLowerCase().contains(keyword) &&
+                                                !currentNote.getCONTENT().toLowerCase().contains(keyword)) {
+                                            dNoteList.remove(currentNote);
+                                        }
                                     }
                                 }
 
-                                cardAdapter = new PostRecyclerAdapter(mPostData, getApplication());
-
-                                LinearLayoutManager layoutmanager = new LinearLayoutManager(Navigation.this,
-                                        LinearLayoutManager.VERTICAL, false);
-                                postRecyclerView.setLayoutManager(layoutmanager);
-                                postRecyclerView.setAdapter(cardAdapter);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.v("read error", databaseError.getMessage());
-                            }
-                        });
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.v("read error", databaseError.getMessage());
+                                }
+                            });
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.v("read error", databaseError.getMessage());
             }
         });
+        displayNotes();
     }
 
     private void displayVoice() {
@@ -240,7 +243,7 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     // copied from yardsale doesnt work yet
-    public void searchVoice(String query) {
+    /*public void searchVoice(String query) {
 
         final String keyword = query.toLowerCase();
 
@@ -283,7 +286,7 @@ public class DashboardActivity extends AppCompatActivity
                 Log.v("read error", databaseError.getMessage());
             }
         });
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
