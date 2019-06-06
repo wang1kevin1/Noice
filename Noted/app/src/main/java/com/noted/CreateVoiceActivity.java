@@ -130,16 +130,12 @@ public class CreateVoiceActivity extends AppCompatActivity {
                     String key = nDatabase.child("Audio").push().getKey();
                     Uri uri = Uri.fromFile(new File(pathSave));
                     Voice voice = new Voice(key, Title, uri, DateStamp);
-
-
                     // System.out.println("this is the key: "+ voice.getKEY() + ", this is the title"+", "+voice.getTITLE()+ ", this is the uri, "+ voice.getURI()+ ", this is the date stamp, "+ voice.getTIMESTAMP());
-                   // Voice voice = new Voice();
-                   // voice.setTITLE("hello");
-                   // voice.setUID("1234345");
-                  //  saveVoice(voice, key);
+                    saveVoice(voice, key);
                     uploadAudio();
                     nameOfMemo.setText("");
                     Toast.makeText(CreateVoiceActivity.this, "Stopped Recording...", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
 
@@ -197,7 +193,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
          dialog.setMessage("uploading...");
          dialog.show();
          System.out.println("this is the title: " + Title);
-         StorageReference path = mStorage.child("Audio").child(Title+".3gp");
+         StorageReference path = mStorage.child("Audio").child(Title + ".3gp");
          Uri uri = Uri.fromFile(new File(pathSave));
          path.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
              @Override
@@ -209,23 +205,18 @@ public class CreateVoiceActivity extends AppCompatActivity {
     }
 
     private void saveVoice(Voice voice, String key) {
-        // note fields are valid
-
         // map note
         Map<String, Object> postValues = voice.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-            if(voice.toMap()!=null)
-            {
-                System.out.println("this is NOTTTTTT NULLLLLLLLLLLLLL");
-            }
+
         // set db structure
         childUpdates.put("/Audio/" + nUID + "/" + key, postValues);
 
         // update db
         nDatabase.updateChildren(childUpdates);
 
-        // note saved
-
+        // voice saved
+        Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
     }
 
 

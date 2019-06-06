@@ -57,7 +57,6 @@ public class Voice {
         HashMap<String, Object> result = new HashMap<>();
         result.put("key", KEY);
         result.put("title", TITLE);
-        result.put("uri", URI);
         result.put("timestamp", TIMESTAMP);
 
         return result;
