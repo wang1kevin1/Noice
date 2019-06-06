@@ -22,6 +22,7 @@ import com.noted.models.Note;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.noted.utils.AccountUtil.getUid;
@@ -42,6 +43,10 @@ public class CreateNoteActivity extends AppCompatActivity {
     private String nTitle;
     private String nContent;
     private String nTimestamp;
+
+    // Lists
+    private List<String> readAccess;
+    private List<String> writeAccess;
 
     // Fab
     private FloatingActionButton nFabSave;

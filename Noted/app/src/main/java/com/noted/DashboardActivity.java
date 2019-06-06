@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -200,6 +201,7 @@ public class DashboardActivity extends AppCompatActivity
         } else if (id == R.id.nav_dashboardLogout) {
             FirebaseAuth.getInstance().signOut();
             Intent redirectToLogin = new Intent(this, LoginActivity.class);
+            Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
             startActivity(redirectToLogin);
             finish();
         }
