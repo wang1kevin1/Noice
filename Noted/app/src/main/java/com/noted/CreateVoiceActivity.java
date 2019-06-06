@@ -120,7 +120,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
 
                     DateStamp = simpleDateFormat.format(new Date());
                     Title = nameOfMemo.getText().toString().trim();
-                    String key = nDatabase.child("Audio").push().getKey();
+                    String key = nDatabase.child("audio").push().getKey();
                     uploadAudio(key);
                     String url = "audio/" + nUID + "/" + key;
                     Voice voice = new Voice(key, Title, url, DateStamp);
@@ -199,7 +199,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
         Map<String, Object> childUpdates = new HashMap<>();
 
         // set db structure
-        childUpdates.put("/Audio/" + nUID + "/" + key, postValues);
+        childUpdates.put("/audio/" + nUID + "/" + key, postValues);
 
         // update db
         nDatabase.updateChildren(childUpdates);

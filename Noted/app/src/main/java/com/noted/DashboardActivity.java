@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noted.adapters.NoteRecyclerAdapter;
+import com.noted.adapters.VoiceRecyclerAdapter;
 import com.noted.models.Note;
 import com.noted.models.User;
 import com.noted.models.Voice;
@@ -53,6 +54,7 @@ public class DashboardActivity extends AppCompatActivity
 
     // Adapter + layout manager
     private NoteRecyclerAdapter dNoteAdapter;
+    private VoiceRecyclerAdapter dVoiceAdapter;
 
 
     ArrayList<Note> dNoteList;
@@ -220,18 +222,47 @@ public class DashboardActivity extends AppCompatActivity
         dNoteRecycler.setVisibility(View.GONE);
         dSearchNotes.setVisibility(View.GONE);
 
-        dVoiceList = new ArrayList<Voice>();
+        dDatabase.child("audio").child(dUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dVoiceList = new ArrayList<Voice>();
 
-        if (dVoiceList.isEmpty()) {
-            dVoiceRecycler.setVisibility(View.GONE);
-            dSearchVoice.setVisibility(View.GONE);
-            dTextEmpty.setText("No recordings to display.");
-            dTextEmpty.setVisibility(View.VISIBLE);
-        } else {
-            dTextEmpty.setVisibility(View.GONE);
-            dSearchVoice.setVisibility(View.VISIBLE);
-            dVoiceRecycler.setVisibility(View.VISIBLE);
-        }
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Voice voice = postSnapshot.getValue(Voice.class);
+                    dVoiceList.add(voice);
+                }
+
+                // set empty note list text
+                if (dVoiceList.isEmpty()) {
+                    dVoiceRecycler.setVisibility(View.GONE);
+                    dSearchVoice.setVisibility(View.GONE);
+
+                    dTextEmpty.setText("No recordings to display.");
+                    dTextEmpty.setVisibility(View.VISIBLE);
+
+                } else {
+                    dTextEmpty.setVisibility(View.GONE);
+                    dSearchVoice.setVisibility(View.VISIBLE);
+                    dVoiceRecycler.setVisibility(View.VISIBLE);
+                }
+
+                // specify an adapter
+                dVoiceAdapter = new VoiceRecyclerAdapter(dVoiceList, getApplication());
+
+                // use a linear layout manager
+                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+                dVoiceRecycler.setLayoutManager(layoutManager);
+
+                // set adapter
+                dVoiceRecycler.setAdapter(dVoiceAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
     }
 
     @Override
