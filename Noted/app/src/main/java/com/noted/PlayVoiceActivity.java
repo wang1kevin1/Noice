@@ -67,6 +67,7 @@ public class PlayVoiceActivity extends AppCompatActivity {
                                     mp.start();
                                 }
                             });
+                            player.prepareAsync();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
