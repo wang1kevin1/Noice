@@ -45,7 +45,7 @@ public class PlayVoiceActivity extends AppCompatActivity {
         // Get intent Strings
         fTitle = intent.getStringExtra("title");
         fUrl = intent.getStringExtra("url");
-        fKey = intent.getStringExtra("key");
+        fKey = intent.getStringExtra("pushkey");
 
         fTextViewTitle.setText(fTitle);
 
