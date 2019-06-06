@@ -16,6 +16,6 @@
 
     <string name="StartRecordingButton">RECORD</string>
     <string name="StopRecordingButton">Stop</string>
-    <string name="NameOfRecordMemo">untitled</string>
+    <string name="NameOfRecordMemo">Untitled Recording</string>
 
 </resources>
