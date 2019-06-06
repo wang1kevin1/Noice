@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.noted.models.Note;
+import com.noted.models.Voice;
 import com.noted.utils.AccountUtil;
 
 import java.io.File;
@@ -35,6 +37,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.noted.utils.AccountUtil.getUid;
 
 
 public class CreateVoiceActivity extends AppCompatActivity {
@@ -47,6 +51,9 @@ public class CreateVoiceActivity extends AppCompatActivity {
     private String pathSave;
     private String DateStamp; // these variabels to put in data base
     private String Title;
+
+    private DatabaseReference nDatabase;
+    private String nUID;
     final int REQUEST_PERMISSION_CODE = 1000;
 
     private StorageReference mStorage;
@@ -65,7 +72,9 @@ public class CreateVoiceActivity extends AppCompatActivity {
         Record = findViewById(R.id.RECORD);
         Stop = findViewById(R.id.STOP);
         mStorage = FirebaseStorage.getInstance().getReference();
+        nUID = getUid();
         dialog = new ProgressDialog(this);
+        nDatabase = FirebaseDatabase.getInstance().getReference();
 
             // setting up the record button listener
             Record.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +82,11 @@ public class CreateVoiceActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if(Permission())
                     {
+                        Title = nameOfMemo.getText().toString().trim();
+                        if (TextUtils.isEmpty(Title)) {
+                            nameOfMemo.setError("Required");
+                            return;
+                        }
                         // get the path to the audio
                         pathSave = Environment.getExternalStorageDirectory()
                                 .getAbsolutePath() +"/" + UUID.randomUUID().toString()+"_audio_record.3gp";
@@ -108,9 +122,21 @@ public class CreateVoiceActivity extends AppCompatActivity {
                     System.out.println("Stopped Recording, this is the path: !!!!!!!!!!!!!!!!!!!!!!!!!!" +pathSave);
                     Stop.setEnabled(false);
                     Record.setEnabled(true);
+
                     simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+
                     DateStamp = simpleDateFormat.format(new Date());
                     Title = nameOfMemo.getText().toString().trim();
+                    String key = nDatabase.child("Audio").push().getKey();
+                    Uri uri = Uri.fromFile(new File(pathSave));
+                    Voice voice = new Voice(key, Title, uri, DateStamp);
+
+
+                    // System.out.println("this is the key: "+ voice.getKEY() + ", this is the title"+", "+voice.getTITLE()+ ", this is the uri, "+ voice.getURI()+ ", this is the date stamp, "+ voice.getTIMESTAMP());
+                   // Voice voice = new Voice();
+                   // voice.setTITLE("hello");
+                   // voice.setUID("1234345");
+                  //  saveVoice(voice, key);
                     uploadAudio();
                     nameOfMemo.setText("");
                     Toast.makeText(CreateVoiceActivity.this, "Stopped Recording...", Toast.LENGTH_SHORT).show();
@@ -180,6 +206,26 @@ public class CreateVoiceActivity extends AppCompatActivity {
 
              }
          });
+    }
+
+    private void saveVoice(Voice voice, String key) {
+        // note fields are valid
+
+        // map note
+        Map<String, Object> postValues = voice.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+            if(voice.toMap()!=null)
+            {
+                System.out.println("this is NOTTTTTT NULLLLLLLLLLLLLL");
+            }
+        // set db structure
+        childUpdates.put("/Audio/" + nUID + "/" + key, postValues);
+
+        // update db
+        nDatabase.updateChildren(childUpdates);
+
+        // note saved
+
     }
 
 
