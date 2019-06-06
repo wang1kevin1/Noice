@@ -100,7 +100,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         // both fields are required
         if (TextUtils.isEmpty(nTitle)) {
-            nEditTitle.setError(REQUIRED);
+            nTitle = "Untitled Note";
             return;
         }
         if (TextUtils.isEmpty(nContent)) {

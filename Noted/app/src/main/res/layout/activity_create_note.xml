@@ -5,7 +5,7 @@
     android:id="@+id/menu_linear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryTint"
+    android:background="@color/note_background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".CreateNoteActivity">
@@ -14,30 +14,30 @@
         android:id="@+id/noteEditTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="0dp"
         android:paddingLeft="4dp"
-        android:paddingTop="2dp"
+        android:paddingTop="4dp"
         android:paddingRight="4dp"
-        android:paddingBottom="2dp"
+        android:paddingBottom="4dp"
         android:background="@color/white"
         android:maxLines="1"
         android:inputType="text"
-        android:scrollHorizontally="true"
-        android:ellipsize="end"
+        android:scrollHorizontally="false"
+        android:textStyle="bold"
         android:textSize="20sp"
-        android:hint='Title'/>
+        android:hint='Untitled Note'/>
 
     <EditText
         android:id="@+id/noteEditContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="top"
         android:layout_below="@id/noteEditTitle"
         android:hint="..."
@@ -46,10 +46,10 @@
         android:paddingLeft="4dp"
         android:paddingTop="2dp"
         android:paddingRight="4dp"
-        android:paddingBottom="2dp"
+        android:paddingBottom="4dp"
         android:background="@color/white"
         android:textSize="20sp"
-        android:scrollHorizontally="false"/>
+        android:scrollHorizontally="false" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/noteFabSave"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
+        android:layout_margin="32dp"
         android:src="@drawable/ic_fab_save" />
 
 </RelativeLayout>
