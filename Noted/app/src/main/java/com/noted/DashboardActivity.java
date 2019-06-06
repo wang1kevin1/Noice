@@ -99,7 +99,8 @@ public class DashboardActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 searchNotes(query);
 
-                return false;
+                dSearchNotes.clearFocus();
+                return true;
             }
 
             @Override
@@ -115,15 +116,16 @@ public class DashboardActivity extends AppCompatActivity
         dSearchVoice.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //searchVoice(query);
+                searchVoice(query);
 
-                return false;
+                dSearchVoice.clearFocus();
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
-                    //searchVoice("");
+                    searchVoice("");
                 }
                 return false;
             }
@@ -146,7 +148,6 @@ public class DashboardActivity extends AppCompatActivity
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Note note = postSnapshot.getValue(Note.class);
                     dNoteList.add(note);
-                    String postKey = postSnapshot.getKey();
                 }
 
                 // set empty note list text
@@ -194,7 +195,6 @@ public class DashboardActivity extends AppCompatActivity
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Note note = postSnapshot.getValue(Note.class);
                     dNoteList.add(note);
-                    String postKey = postSnapshot.getKey();
                 }
 
                 // set empty note list text
@@ -267,8 +267,8 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void displayVoice() {
-        dNoteRecycler.setVisibility(View.GONE);
         dSearchNotes.setVisibility(View.GONE);
+        dNoteRecycler.setVisibility(View.GONE);
 
         dDatabase.child("audio").child(dUID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -292,6 +292,88 @@ public class DashboardActivity extends AppCompatActivity
                     dTextEmpty.setVisibility(View.GONE);
                     dSearchVoice.setVisibility(View.VISIBLE);
                     dVoiceRecycler.setVisibility(View.VISIBLE);
+                }
+
+                // specify an adapter
+                dVoiceAdapter = new VoiceRecyclerAdapter(dVoiceList, getApplication());
+
+                // use a linear layout manager
+                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+                dVoiceRecycler.setLayoutManager(layoutManager);
+
+                // set adapter
+                dVoiceRecycler.setAdapter(dVoiceAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
+    }
+
+    private void displaySortedVoice() {
+        dSearchNotes.setVisibility(View.GONE);
+        dNoteRecycler.setVisibility(View.GONE);
+
+        dDatabase.child("audio").child(dUID).orderByChild("title").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dVoiceList = new ArrayList<Voice>();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Voice voice = postSnapshot.getValue(Voice.class);
+                    dVoiceList.add(voice);
+                }
+
+                // set empty note list text
+                if (dVoiceList.isEmpty()) {
+                    dVoiceRecycler.setVisibility(View.GONE);
+                    dSearchVoice.setVisibility(View.GONE);
+
+                    dTextEmpty.setText("No recordings to display.");
+                    dTextEmpty.setVisibility(View.VISIBLE);
+
+                } else {
+                    dTextEmpty.setVisibility(View.GONE);
+                    dSearchVoice.setVisibility(View.VISIBLE);
+                    dVoiceRecycler.setVisibility(View.VISIBLE);
+                }
+
+                // specify an adapter
+                dVoiceAdapter = new VoiceRecyclerAdapter(dVoiceList, getApplication());
+
+                // use a linear layout manager
+                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+                dVoiceRecycler.setLayoutManager(layoutManager);
+
+                // set adapter
+                dVoiceRecycler.setAdapter(dVoiceAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
+    }
+
+    public void searchVoice(String query) {
+
+        final String keyword = query.toLowerCase();
+
+        dDatabase.child("audio").child(dUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dVoiceList = new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Voice voice = postSnapshot.getValue(Voice.class);
+
+                    if (voice.getTITLE().toLowerCase().contains(keyword)) {
+                        dVoiceList.add(voice);
+                    }
                 }
 
                 // specify an adapter
@@ -342,7 +424,7 @@ public class DashboardActivity extends AppCompatActivity
             if (dNoteRecycler.getVisibility() == View.VISIBLE) {
                 displaySortedNotes();
             } else if (dVoiceRecycler.getVisibility() == View.VISIBLE) {
-                // displaySortedVoice();
+                displaySortedVoice();
             } else {
                 Toast.makeText(this, "Nothing to sort.", Toast.LENGTH_SHORT).show();
             }
@@ -353,7 +435,7 @@ public class DashboardActivity extends AppCompatActivity
             if (dNoteRecycler.getVisibility() == View.VISIBLE) {
                 displayNotes();
             } else if (dVoiceRecycler.getVisibility() == View.VISIBLE) {
-                // displayVoice();
+                displayVoice();
             } else {
                 Toast.makeText(this, "Nothing to sort.", Toast.LENGTH_SHORT).show();
             }

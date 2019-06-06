@@ -2,16 +2,22 @@ package com.noted.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.noted.R;
 import com.noted.models.Voice;
 
@@ -24,6 +30,7 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
     private ArrayList<Voice> nVoiceList;
 
     private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference();
+    private StorageReference nStorage = FirebaseStorage.getInstance().getReference();
 
     Context context;
 
@@ -68,37 +75,43 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
         final String title = voice.getTITLE();
         final String timestamp = voice.getTIMESTAMP();
         final String pushkey = voice.getKEY();
+        final String url = voice.getURL();
 
         // populate view holder
         holder.nTitle.setText(title);
-        holder.nTimestamp.setText(timestamp);
+        holder.nTimestamp.setText("Recorded " + timestamp);
 
-       /* holder.nCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), EditNoteActivity.class);
-                intent.putExtra("title", title);
-                intent.putExtra("content", content);
-                intent.putExtra("pushkey", pushkey);
-                view.getContext().startActivity(intent);
-            }
-        });*/
-
-        /*holder.nCardView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.nCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Snackbar.make(v, "Delete Note?", Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Delete Recording?", Snackbar.LENGTH_LONG)
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                nDatabase.child("notes").child(nUID).child(pushkey).removeValue();
+                                /*
+                                // java.lang.IllegalArgumentException: childName cannot be null or empty
+
+                                nStorage.child(url).child(title + ".3pg").delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.v("delete recording", "Success");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception exception) {
+                                                Log.v("read error", exception.getMessage());
+                                            }
+                                        });
+                                */
+                                nDatabase.child("audio").child(nUID).child(pushkey).removeValue();
 
                                 nVoiceList.remove(position);
                             }
                         }).show();
                 return true;
             }
-        });*/
+        });
     }
 
     // Return the size of itemList (invoked by the layout manager)
