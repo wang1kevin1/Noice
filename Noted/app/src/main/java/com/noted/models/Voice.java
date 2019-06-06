@@ -22,8 +22,7 @@ public class Voice {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Voice(String key, String title, String url,
-                String timestamp) {
+    public Voice(String key, String title, String url, String timestamp) {
         this.KEY = key;
         this.TITLE = title;
         this.TIMESTAMP = timestamp;

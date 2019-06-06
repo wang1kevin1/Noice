@@ -122,7 +122,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
                     Title = nameOfMemo.getText().toString().trim();
                     String key = nDatabase.child("audio").push().getKey();
                     uploadAudio(key);
-                    String url = "audio/" + nUID + "/" + key;
+                    String url = "/audio/" + nUID + "/" + key;
                     Voice voice = new Voice(key, Title, url, DateStamp);
                     saveVoice(voice, key);
                     nameOfMemo.setText("");

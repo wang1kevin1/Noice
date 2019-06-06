@@ -33,6 +33,7 @@ import com.noted.models.User;
 import com.noted.models.Voice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.noted.utils.AccountUtil.getDatabaseReference;
 import static com.noted.utils.AccountUtil.getUid;
@@ -273,10 +274,11 @@ public class DashboardActivity extends AppCompatActivity
         dDatabase.child("audio").child(dUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dVoiceList = new ArrayList<Voice>();
+                dVoiceList = new ArrayList<>();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Voice voice = postSnapshot.getValue(Voice.class);
+                    HashMap<String, String> map = (HashMap) postSnapshot.getValue();;
+                    Voice voice = new Voice(map.get("key"), map.get("title"), map.get("url"), map.get("timestamp"));
                     dVoiceList.add(voice);
                 }
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.noted.PlayVoiceActivity;
 import com.noted.R;
 import com.noted.models.Voice;
 
@@ -30,6 +31,7 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
     String nUID;
 
     public static class VoiceViewHolder extends RecyclerView.ViewHolder {
+
         public CardView nCardView;
         public TextView nTitle;
         public TextView nTimestamp;
@@ -67,38 +69,38 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
         // get item attributes
         final String title = voice.getTITLE();
         final String timestamp = voice.getTIMESTAMP();
-        final String pushkey = voice.getKEY();
+        final String key = voice.getKEY();
+        final String url = voice.getURL();
 
         // populate view holder
         holder.nTitle.setText(title);
         holder.nTimestamp.setText(timestamp);
 
-       /* holder.nCardView.setOnClickListener(new View.OnClickListener() {
+        holder.nCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), EditNoteActivity.class);
+                Intent intent = new Intent(view.getContext(), PlayVoiceActivity.class);
                 intent.putExtra("title", title);
-                intent.putExtra("content", content);
-                intent.putExtra("pushkey", pushkey);
+                intent.putExtra("key", key);
+                intent.putExtra("url", url);
                 view.getContext().startActivity(intent);
             }
-        });*/
+        });
 
-        /*holder.nCardView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.nCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Snackbar.make(v, "Delete Note?", Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Delete Recording?", Snackbar.LENGTH_LONG)
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                nDatabase.child("notes").child(nUID).child(pushkey).removeValue();
-
+                                nDatabase.child("audio").child(nUID).child(key).removeValue();
                                 nVoiceList.remove(position);
                             }
                         }).show();
                 return true;
             }
-        });*/
+        });
     }
 
     // Return the size of itemList (invoked by the layout manager)
