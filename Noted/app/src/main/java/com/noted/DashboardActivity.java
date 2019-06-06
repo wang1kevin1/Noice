@@ -6,6 +6,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
@@ -26,10 +28,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noted.adapters.NoteRecyclerAdapter;
 import com.noted.models.Note;
+import com.noted.models.User;
 import com.noted.models.Voice;
 
 import java.util.ArrayList;
 
+import static com.noted.utils.AccountUtil.getDatabaseReference;
 import static com.noted.utils.AccountUtil.getUid;
 
 public class DashboardActivity extends AppCompatActivity
@@ -43,11 +47,15 @@ public class DashboardActivity extends AppCompatActivity
     private RecyclerView dNoteRecycler;
     private RecyclerView dVoiceRecycler;
 
+    // SearchView
+    private SearchView dSearchNotes;
+    private SearchView dSearchVoice;
+
     // Adapter + layout manager
     private NoteRecyclerAdapter dNoteAdapter;
-    private LinearLayoutManager layoutManager;
 
-    private ArrayList<Note> dNoteList;
+
+    ArrayList<Note> dNoteList;
     private ArrayList<Voice> dVoiceList;
 
     private TextView dTextEmpty;
@@ -74,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity
 
         // initialize database stuff
         dUID = getUid();
-        dDatabase = FirebaseDatabase.getInstance().getReference();
+        dDatabase = getDatabaseReference();
         dDatabase.keepSynced(true);
 
         // initialize views
@@ -82,31 +90,74 @@ public class DashboardActivity extends AppCompatActivity
         dNoteRecycler = findViewById(R.id.dashboardNoteRecyclerView);
         dVoiceRecycler = findViewById(R.id.dashboardVoiceRecyclerView);
 
+        //initialize searchviews
+        dSearchNotes = findViewById(R.id.dashboardSearchNotes);
+        dSearchNotes.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchNotes(query);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    searchNotes("");
+                }
+                return false;
+            }
+        });
+
+        dSearchVoice = findViewById(R.id.dashboardSearchVoice);
+        dSearchVoice.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //searchVoice(query);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    //searchVoice("");
+                }
+                return false;
+            }
+        });
+
         // default focus is notes
         setTitle("My Notes");
         displayNotes();
     }
 
     private void displayNotes() {
+        dSearchVoice.setVisibility(View.GONE);
         dVoiceRecycler.setVisibility(View.GONE);
 
         dDatabase.child("notes").child(dUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dNoteList = new ArrayList<Note>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Note note = postSnapshot.getValue(Note.class);
                     dNoteList.add(note);
-
                     String postKey = postSnapshot.getKey();
                 }
+
                 // set empty note list text
                 if (dNoteList.isEmpty()) {
                     dNoteRecycler.setVisibility(View.GONE);
+                    dSearchNotes.setVisibility(View.GONE);
+
                     dTextEmpty.setText("No notes to display.");
                     dTextEmpty.setVisibility(View.VISIBLE);
+
                 } else {
                     dTextEmpty.setVisibility(View.GONE);
+                    dSearchNotes.setVisibility(View.VISIBLE);
                     dNoteRecycler.setVisibility(View.VISIBLE);
                 }
 
@@ -114,13 +165,50 @@ public class DashboardActivity extends AppCompatActivity
                 dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
 
                 // use a linear layout manager
-                layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dNoteRecycler.setLayoutManager(layoutManager);
 
                 // set adapter
                 dNoteRecycler.setAdapter(dNoteAdapter);
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
+    }
+
+    public void searchNotes(String query) {
+
+        final String keyword = query.toLowerCase();
+
+        dDatabase.child("notes").child(dUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dNoteList = new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Note note = postSnapshot.getValue(Note.class);
+
+                    if (note.getTITLE().toLowerCase().contains(keyword) ||
+                            note.getCONTENT().toLowerCase().contains(keyword)) {
+                        dNoteList.add(note);
+                    }
+                }
+
+                // specify an adapter
+                dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
+
+                // use a linear layout manager
+                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+                dNoteRecycler.setLayoutManager(layoutManager);
+
+                // set adapter
+                dNoteRecycler.setAdapter(dNoteAdapter);
+            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.v("read error", databaseError.getMessage());
@@ -130,15 +218,18 @@ public class DashboardActivity extends AppCompatActivity
 
     private void displayVoice() {
         dNoteRecycler.setVisibility(View.GONE);
+        dSearchNotes.setVisibility(View.GONE);
 
         dVoiceList = new ArrayList<Voice>();
 
         if (dVoiceList.isEmpty()) {
             dVoiceRecycler.setVisibility(View.GONE);
+            dSearchVoice.setVisibility(View.GONE);
             dTextEmpty.setText("No recordings to display.");
             dTextEmpty.setVisibility(View.VISIBLE);
         } else {
             dTextEmpty.setVisibility(View.GONE);
+            dSearchVoice.setVisibility(View.VISIBLE);
             dVoiceRecycler.setVisibility(View.VISIBLE);
         }
     }

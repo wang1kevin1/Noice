@@ -8,24 +8,44 @@
     tools:context=".DashboardActivity"
     tools:showIn="@layout/app_bar_dashboard">
 
+    <android.support.v7.widget.SearchView
+        android:id="@+id/dashboardSearchNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:windowSoftInputMode="stateHidden"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search..." />
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/dashboardSearchVoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:windowSoftInputMode="stateHidden"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search..." />
+
     <TextView
         android:id="@+id/dashboardTextEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
-        android:text="Message" />
+        android:text="Message"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dashboardNoteRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dashboardSearchNotes"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dashboardVoiceRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dashboardSearchVoice"/>
 
 </android.support.constraint.ConstraintLayout>
