@@ -158,6 +158,9 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void displayNotes() {
+        dSearchNotes.setVisibility(View.GONE);
+        dNoteRecycler.setVisibility(View.GONE);
+
         // set empty note list text
         if (dNoteList.isEmpty()) {
             dNoteRecycler.setVisibility(View.GONE);
