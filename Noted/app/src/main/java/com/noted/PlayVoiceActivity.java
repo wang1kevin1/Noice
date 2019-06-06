@@ -55,12 +55,12 @@ public class PlayVoiceActivity extends AppCompatActivity {
         fPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fStorage.child(fUrl + "/" + fTitle).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                fStorage.child(fUrl).child(fTitle + ".3gp").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         MediaPlayer player = new MediaPlayer();
                         try {
-                            player.setDataSource(uri.getPath());
+                            player.setDataSource(uri.toString());
                             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {

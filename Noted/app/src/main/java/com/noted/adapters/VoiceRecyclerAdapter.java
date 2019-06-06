@@ -2,16 +2,22 @@ package com.noted.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.noted.PlayVoiceActivity;
 import com.noted.R;
 import com.noted.models.Voice;
@@ -25,6 +31,7 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
     private ArrayList<Voice> nVoiceList;
 
     private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference();
+    private StorageReference nStorage = FirebaseStorage.getInstance().getReference();
 
     Context context;
 
@@ -69,7 +76,7 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
         // get item attributes
         final String title = voice.getTITLE();
         final String timestamp = voice.getTIMESTAMP();
-        final String key = voice.getKEY();
+        final String pushkey = voice.getPUSHKEY();
         final String url = voice.getURL();
 
         // populate view holder
@@ -81,7 +88,7 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), PlayVoiceActivity.class);
                 intent.putExtra("title", title);
-                intent.putExtra("key", key);
+                intent.putExtra("pushkey", pushkey);
                 intent.putExtra("url", url);
                 view.getContext().startActivity(intent);
             }
@@ -94,7 +101,22 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                nDatabase.child("audio").child(nUID).child(key).removeValue();
+
+                                nStorage.child(url).child(title + ".3gp").delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.v("delete recording", "Success");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        Log.v("read error", exception.getMessage());
+                                    }
+                                });
+
+                                nDatabase.child("audio").child(nUID).child(pushkey).removeValue();
+
                                 nVoiceList.remove(position);
                             }
                         }).show();

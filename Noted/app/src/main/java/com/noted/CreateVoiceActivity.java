@@ -105,6 +105,7 @@ public class CreateVoiceActivity extends AppCompatActivity {
             Stop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    nameOfMemo.clearFocus();
                     try {
                         Recorder.stop();
                         Recorder.release();
@@ -120,11 +121,11 @@ public class CreateVoiceActivity extends AppCompatActivity {
 
                     DateStamp = simpleDateFormat.format(new Date());
                     Title = nameOfMemo.getText().toString().trim();
-                    String key = nDatabase.child("audio").push().getKey();
-                    uploadAudio(key);
-                    String url = "/audio/" + nUID + "/" + key;
-                    Voice voice = new Voice(key, Title, url, DateStamp);
-                    saveVoice(voice, key);
+                    String pushkey = nDatabase.child("audio").child(nUID).push().getKey();
+                    uploadAudio(pushkey);
+                    String url = "/audio/" + nUID + "/" + pushkey;
+                    Voice voice = new Voice(pushkey, Title, url, DateStamp);
+                    saveVoice(voice, pushkey);
                     nameOfMemo.setText("");
                     finish();
                 }
@@ -180,10 +181,10 @@ public class CreateVoiceActivity extends AppCompatActivity {
 
     }
 
-    private void uploadAudio(String key) {
+    private void uploadAudio(String pushkey) {
          Toast.makeText(this,"uploading...", Toast.LENGTH_SHORT).show();
          System.out.println("this is the title: " + Title);
-         StorageReference path = mStorage.child("audio").child(nUID).child(key).child(Title + ".3gp");
+         StorageReference path = mStorage.child("audio").child(nUID).child(pushkey).child(Title + ".3gp");
          Uri uri = Uri.fromFile(new File(pathSave));
          path.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
              @Override
@@ -193,13 +194,13 @@ public class CreateVoiceActivity extends AppCompatActivity {
          });
     }
 
-    private void saveVoice(Voice voice, String key) {
+    private void saveVoice(Voice voice, String pushkey) {
         // map note
         Map<String, Object> postValues = voice.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
 
         // set db structure
-        childUpdates.put("/audio/" + nUID + "/" + key, postValues);
+        childUpdates.put("/audio/" + nUID + "/" + pushkey, postValues);
 
         // update db
         nDatabase.updateChildren(childUpdates);

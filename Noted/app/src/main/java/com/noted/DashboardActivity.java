@@ -281,8 +281,7 @@ public class DashboardActivity extends AppCompatActivity
                 dVoiceList = new ArrayList<>();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    HashMap<String, String> map = (HashMap) postSnapshot.getValue();;
-                    Voice voice = new Voice(map.get("key"), map.get("title"), map.get("url"), map.get("timestamp"));
+                    Voice voice = postSnapshot.getValue(Voice.class);
                     dVoiceList.add(voice);
                 }
 
