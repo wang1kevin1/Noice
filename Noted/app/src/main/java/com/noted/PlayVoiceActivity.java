@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
+import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
+import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -24,6 +27,7 @@ public class PlayVoiceActivity extends AppCompatActivity {
 
     // Edit Text
     private TextView fTextViewTitle;
+    private CircleLineVisualizer mVisualizer;
 
     // Strings
     private String fUrl;
@@ -37,6 +41,8 @@ public class PlayVoiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_voice);
+
+        mVisualizer = findViewById(R.id.circleline);
 
         fTextViewTitle = findViewById(R.id.voiceTitle);
 
@@ -59,12 +65,24 @@ public class PlayVoiceActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         MediaPlayer player = new MediaPlayer();
+                        // audio visualizer
+                        int audioSessionId = player.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            mVisualizer.setAudioSessionId(audioSessionId);
+
                         try {
                             player.setDataSource(uri.toString());
                             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
                                     mp.start();
+                                }
+                            });
+                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    if (mVisualizer != null)
+                                        mVisualizer.hide();
                                 }
                             });
                             player.prepareAsync();
@@ -86,6 +104,16 @@ public class PlayVoiceActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mVisualizer != null)
+            mVisualizer.release();
     }
 
 }

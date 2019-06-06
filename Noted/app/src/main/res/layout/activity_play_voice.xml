@@ -8,6 +8,16 @@
     android:gravity="center"
     tools:context=".CreateVoiceActivity">
 
+    <com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/circleline"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        custom:avDensity="0.8"
+        custom:avType="fill"
+        custom:avColor="@color/av_dark_blue"
+        custom:avSpeed="normal"/>
+
     <TextView
         android:id="@+id/voiceTitle"
         android:layout_width="wrap_content"
