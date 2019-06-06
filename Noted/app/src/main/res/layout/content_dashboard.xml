@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,40 +12,40 @@
         android:id="@+id/dashboardSearchNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:queryHint="Search..."
-        app:iconifiedByDefault="false"
-        android:windowSoftInputMode="stateHidden"
         android:layout_gravity="top"
-        android:layout_margin="8dp"/>
+        android:windowSoftInputMode="stateHidden"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search..." />
 
     <android.support.v7.widget.SearchView
         android:id="@+id/dashboardSearchVoice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:queryHint="Search..."
-        app:iconifiedByDefault="false"
-        android:windowSoftInputMode="stateHidden"
         android:layout_gravity="top"
-        android:layout_margin="8dp"/>
+        android:windowSoftInputMode="stateHidden"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search..." />
 
     <TextView
         android:id="@+id/dashboardTextEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
-        android:text="Message" />
+        android:text="Message"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dashboardNoteRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dashboardSearchNotes"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dashboardVoiceRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dashboardSearchVoice"/>
 
-
-
-</android.widget.LinearLayout>
+</android.support.constraint.ConstraintLayout>
