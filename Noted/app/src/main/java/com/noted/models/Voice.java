@@ -1,19 +1,16 @@
 package com.noted.models;
 
 
-import android.net.Uri;
-
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
 public class Voice {
-    private String KEY;
+    private String PUSHKEY;
     private String TITLE;
     private String TIMESTAMP;
     private String URL;
@@ -22,18 +19,18 @@ public class Voice {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Voice(String key, String title, String url,
+    public Voice(String pushkey, String title, String url,
                 String timestamp) {
-        this.KEY = key;
+        this.PUSHKEY = pushkey;
         this.TITLE = title;
         this.TIMESTAMP = timestamp;
         this.URL = url;
     }
 
-    public String getKEY() {
-        return KEY;
+    public String getPUSHKEY() {
+        return PUSHKEY;
     }
-    public void setUID(String key) {this.KEY = key; }
+    public void setPUSHKEY(String pushkey) {this.PUSHKEY = pushkey; }
 
     public String getTITLE() {
         return TITLE;
@@ -41,23 +38,22 @@ public class Voice {
     public void setTITLE(String title) {this.TITLE = title; }
 
 
-    public String getURL( ) {
+    public String getURL() {
         return URL;
     }
+    public void setURL(String url) {this.URL = url; }
 
 
-    public String getTIMESTAMP() {
-        return TIMESTAMP;
-    }
+    public String getTIMESTAMP() { return TIMESTAMP; }
     public void setTIMESTAMP(String timestamp) {this.TIMESTAMP = timestamp; }
 
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("key", KEY);
+        result.put("pushkey", PUSHKEY);
         result.put("title", TITLE);
-        result.put("url", URL);
         result.put("timestamp", TIMESTAMP);
+        result.put("url", URL);
 
         return result;
     }

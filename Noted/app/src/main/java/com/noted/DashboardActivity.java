@@ -56,9 +56,11 @@ public class DashboardActivity extends AppCompatActivity
     private NoteRecyclerAdapter dNoteAdapter;
     private VoiceRecyclerAdapter dVoiceAdapter;
 
+    LinearLayoutManager layoutManager;
+
 
     ArrayList<Note> dNoteList;
-    private ArrayList<Voice> dVoiceList;
+    ArrayList<Voice> dVoiceList;
 
     private TextView dTextEmpty;
 
@@ -94,6 +96,7 @@ public class DashboardActivity extends AppCompatActivity
 
         //initialize searchviews
         dSearchNotes = findViewById(R.id.dashboardSearchNotes);
+        dSearchNotes.clearFocus();
         dSearchNotes.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -113,6 +116,7 @@ public class DashboardActivity extends AppCompatActivity
         });
 
         dSearchVoice = findViewById(R.id.dashboardSearchVoice);
+        dSearchVoice.clearFocus();
         dSearchVoice.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -168,7 +172,7 @@ public class DashboardActivity extends AppCompatActivity
                 dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
 
                 // use a linear layout manager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dNoteRecycler.setLayoutManager(layoutManager);
 
@@ -215,7 +219,7 @@ public class DashboardActivity extends AppCompatActivity
                 dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
 
                 // use a linear layout manager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dNoteRecycler.setLayoutManager(layoutManager);
 
@@ -251,7 +255,7 @@ public class DashboardActivity extends AppCompatActivity
                 dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
 
                 // use a linear layout manager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dNoteRecycler.setLayoutManager(layoutManager);
 
@@ -298,7 +302,7 @@ public class DashboardActivity extends AppCompatActivity
                 dVoiceAdapter = new VoiceRecyclerAdapter(dVoiceList, getApplication());
 
                 // use a linear layout manager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dVoiceRecycler.setLayoutManager(layoutManager);
 
@@ -345,7 +349,7 @@ public class DashboardActivity extends AppCompatActivity
                 dVoiceAdapter = new VoiceRecyclerAdapter(dVoiceList, getApplication());
 
                 // use a linear layout manager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dVoiceRecycler.setLayoutManager(layoutManager);
 
@@ -380,7 +384,7 @@ public class DashboardActivity extends AppCompatActivity
                 dVoiceAdapter = new VoiceRecyclerAdapter(dVoiceList, getApplication());
 
                 // use a linear layout manager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                layoutManager = new LinearLayoutManager(DashboardActivity.this,
                         LinearLayoutManager.VERTICAL, false);
                 dVoiceRecycler.setLayoutManager(layoutManager);
 

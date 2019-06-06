@@ -1,7 +1,6 @@
 package com.noted.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
@@ -72,10 +71,12 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
         Voice voice = nVoiceList.get(position);
 
         // get item attributes
+        final String pushkey = voice.getPUSHKEY();
         final String title = voice.getTITLE();
         final String timestamp = voice.getTIMESTAMP();
-        final String pushkey = voice.getKEY();
         final String url = voice.getURL();
+
+        Log.i("Which is null? ", "nUID: " + nUID + " key: " + pushkey);
 
         // populate view holder
         holder.nTitle.setText(title);
@@ -88,10 +89,7 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                /*
-                                // java.lang.IllegalArgumentException: childName cannot be null or empty
-
-                                nStorage.child(url).child(title + ".3pg").delete()
+                                nStorage.child(url).child(title + ".3gp").delete()
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -100,10 +98,11 @@ public class VoiceRecyclerAdapter extends RecyclerView.Adapter<VoiceRecyclerAdap
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception exception) {
+                                                Log.i("path", url);
                                                 Log.v("read error", exception.getMessage());
                                             }
                                         });
-                                */
+
                                 nDatabase.child("audio").child(nUID).child(pushkey).removeValue();
 
                                 nVoiceList.remove(position);
