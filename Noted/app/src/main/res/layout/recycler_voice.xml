@@ -25,7 +25,7 @@
             android:background="@color/colorPrimary"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_play_circle_outline_black_24dp"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"
             />
 
     <LinearLayout
