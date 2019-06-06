@@ -15,19 +15,19 @@ import java.util.Map;
 public class Voice {
     private String KEY;
     private String TITLE;
-     private Uri URI;
     private String TIMESTAMP;
+    private String URL;
 
     public Voice() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Voice(String key, String title, Uri uri,
+    public Voice(String key, String title, String url,
                 String timestamp) {
         this.KEY = key;
         this.TITLE = title;
-        this.URI = uri;
         this.TIMESTAMP = timestamp;
+        this.URL = url;
     }
 
     public String getKEY() {
@@ -41,10 +41,9 @@ public class Voice {
     public void setTITLE(String title) {this.TITLE = title; }
 
 
-    public Uri getURI( ) {
-        return URI;
+    public String getURL( ) {
+        return URL;
     }
-    public void setMEDIA(Uri uri) {this.URI = uri; }
 
 
     public String getTIMESTAMP() {
@@ -57,6 +56,7 @@ public class Voice {
         HashMap<String, Object> result = new HashMap<>();
         result.put("key", KEY);
         result.put("title", TITLE);
+        result.put("url", URL);
         result.put("timestamp", TIMESTAMP);
 
         return result;
