@@ -182,6 +182,54 @@ public class DashboardActivity extends AppCompatActivity
         });
     }
 
+    private void displaySortedNotes() {
+        dSearchVoice.setVisibility(View.GONE);
+        dVoiceRecycler.setVisibility(View.GONE);
+
+        dDatabase.child("notes").child(dUID).orderByChild("title").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dNoteList = new ArrayList<Note>();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Note note = postSnapshot.getValue(Note.class);
+                    dNoteList.add(note);
+                    String postKey = postSnapshot.getKey();
+                }
+
+                // set empty note list text
+                if (dNoteList.isEmpty()) {
+                    dNoteRecycler.setVisibility(View.GONE);
+                    dSearchNotes.setVisibility(View.GONE);
+
+                    dTextEmpty.setText("No notes to display.");
+                    dTextEmpty.setVisibility(View.VISIBLE);
+
+                } else {
+                    dTextEmpty.setVisibility(View.GONE);
+                    dSearchNotes.setVisibility(View.VISIBLE);
+                    dNoteRecycler.setVisibility(View.VISIBLE);
+                }
+
+                // specify an adapter
+                dNoteAdapter = new NoteRecyclerAdapter(dNoteList, getApplication());
+
+                // use a linear layout manager
+                LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+                dNoteRecycler.setLayoutManager(layoutManager);
+
+                // set adapter
+                dNoteRecycler.setAdapter(dNoteAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("read error", databaseError.getMessage());
+            }
+        });
+    }
+
     public void searchNotes(String query) {
 
         final String keyword = query.toLowerCase();
@@ -290,8 +338,25 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sort_date) {
+        if (id == R.id.action_sort_atoz) {
+            if (dNoteRecycler.getVisibility() == View.VISIBLE) {
+                displaySortedNotes();
+            } else if (dVoiceRecycler.getVisibility() == View.VISIBLE) {
+                // displaySortedVoice();
+            } else {
+                Toast.makeText(this, "Nothing to sort.", Toast.LENGTH_SHORT).show();
+            }
+        }
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_sort_date) {
+            if (dNoteRecycler.getVisibility() == View.VISIBLE) {
+                displayNotes();
+            } else if (dVoiceRecycler.getVisibility() == View.VISIBLE) {
+                // displayVoice();
+            } else {
+                Toast.makeText(this, "Nothing to sort.", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

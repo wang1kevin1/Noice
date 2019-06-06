@@ -80,7 +80,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         // populate view holder
         holder.nTitle.setText(title);
         holder.nContent.setText(content);
-        holder.nTimestamp.setText(timestamp);
+        holder.nTimestamp.setText("Last edited: " + timestamp);
 
         holder.nCardView.setOnClickListener(new View.OnClickListener() {
             @Override

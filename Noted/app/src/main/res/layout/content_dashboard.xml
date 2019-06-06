@@ -40,12 +40,14 @@
         android:id="@+id/dashboardNoteRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/dashboardSearchNotes"/>
+        app:layout_constraintTop_toBottomOf="@id/dashboardSearchNotes"
+        android:paddingBottom="50dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dashboardVoiceRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/dashboardSearchVoice"/>
+        app:layout_constraintTop_toBottomOf="@id/dashboardSearchVoice"
+        android:paddingBottom="50dp"/>
 
 </android.support.constraint.ConstraintLayout>
