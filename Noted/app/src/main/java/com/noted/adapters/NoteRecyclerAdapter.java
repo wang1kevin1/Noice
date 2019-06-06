@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.noted.DashboardActivity;
+import com.noted.EditNoteActivity;
 import com.noted.R;
 import com.noted.models.Note;
 import com.noted.utils.AccountUtil;
@@ -79,6 +81,17 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         holder.nTitle.setText(title);
         holder.nContent.setText(content);
         holder.nTimestamp.setText(timestamp);
+
+        holder.nCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), EditNoteActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("content", content);
+                intent.putExtra("pushkey", pushkey);
+                view.getContext().startActivity(intent);
+            }
+        });
 
         holder.nCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

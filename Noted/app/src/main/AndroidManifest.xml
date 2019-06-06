@@ -55,6 +55,12 @@
             android:label="New Note"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".EditNoteActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Edit Note"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>
