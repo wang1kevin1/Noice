@@ -1,47 +1,50 @@
 package com.noted.models;
 
 
+import android.net.Uri;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
 public class Voice {
-    private String UID;
+    private String KEY;
     private String TITLE;
-    // private something MEDIA;
     private String TIMESTAMP;
+    private String URL;
 
     public Voice() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Voice(String uid, String title, String media,
+    public Voice(String key, String title, String url,
                 String timestamp) {
-        this.UID = uid;
+        this.KEY = key;
         this.TITLE = title;
-        //this.MEDIA = media;
         this.TIMESTAMP = timestamp;
+        this.URL = url;
     }
 
-    public String getUID() {
-        return UID;
+    public String getKEY() {
+        return KEY;
     }
-    public void setUID(String uid) {this.UID = uid; }
+    public void setUID(String key) {this.KEY = key; }
 
     public String getTITLE() {
         return TITLE;
     }
     public void setTITLE(String title) {this.TITLE = title; }
 
-    /*
-    public ______ getMEDIA() {
-        return MEDIA;
+
+    public String getURL( ) {
+        return URL;
     }
-    public void setMEDIA(______ media) {this.MEDIA = media; }
-    */
+
 
     public String getTIMESTAMP() {
         return TIMESTAMP;
@@ -51,9 +54,9 @@ public class Voice {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", UID);
+        result.put("key", KEY);
         result.put("title", TITLE);
-        //result.put("media", MEDIA);
+        result.put("url", URL);
         result.put("timestamp", TIMESTAMP);
 
         return result;
