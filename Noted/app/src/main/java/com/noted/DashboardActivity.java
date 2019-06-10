@@ -145,14 +145,14 @@ public class DashboardActivity extends AppCompatActivity
         dSearchVoice.setVisibility(View.GONE);
         dVoiceRecycler.setVisibility(View.GONE);
 
-        dDatabase.child("notes").child(dUID).addValueEventListener(new ValueEventListener() {
+        dDatabase.child("notes").child(dUID).orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dNoteList = new ArrayList<Note>();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Note note = postSnapshot.getValue(Note.class);
-                    dNoteList.add(note);
+                    dNoteList.add(0, note);
                 }
 
                 // set empty note list text
@@ -275,14 +275,14 @@ public class DashboardActivity extends AppCompatActivity
         dSearchNotes.setVisibility(View.GONE);
         dNoteRecycler.setVisibility(View.GONE);
 
-        dDatabase.child("audio").child(dUID).addValueEventListener(new ValueEventListener() {
+        dDatabase.child("audio").child(dUID).orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dVoiceList = new ArrayList<>();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Voice voice = postSnapshot.getValue(Voice.class);
-                    dVoiceList.add(voice);
+                    dVoiceList.add(0,voice);
                 }
 
                 // set empty note list text

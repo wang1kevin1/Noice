@@ -37,6 +37,9 @@ public class PlayVoiceActivity extends AppCompatActivity {
     // Storage
     private StorageReference fStorage;
 
+    // media player
+    private MediaPlayer player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +67,7 @@ public class PlayVoiceActivity extends AppCompatActivity {
                 fStorage.child(fUrl).child(fTitle + ".3gp").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        MediaPlayer player = new MediaPlayer();
+                        player = new MediaPlayer();
                         // audio visualizer
                         int audioSessionId = player.getAudioSessionId();
                         if (audioSessionId != -1)
@@ -100,6 +103,13 @@ public class PlayVoiceActivity extends AppCompatActivity {
         fBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(player.isPlaying())
+                {
+                    player.stop();
+                    player.release();
+                }
+
                 finish();
             }
         });
